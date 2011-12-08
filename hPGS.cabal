@@ -1,5 +1,5 @@
 Name:		hPGS
-Version:	0.1
+Version:	0.1.0.999
 Synopsis:	
 Description: 	
 License: 	BSD3
@@ -18,9 +18,8 @@ Extra-source-files: Config.hs
                     csrc/libstdhep.sym
                     csrc/libtauola.sym
                     csrc/libpythiaext.sym
-
+                    fsrc/pgs_olympics.f
              
-
 
 
 --Executable hpgs
@@ -46,6 +45,7 @@ Library
                    HEP.Package.PGS.Job
                    HEP.Package.PGS.Command
                    HEP.Package.PGS.PGSLIB.Internal
+                   HEP.Package.PGS.Olympics.FFI
   Other-Modules: 
   Include-dirs:    csrc
   Install-includes: 

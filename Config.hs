@@ -47,6 +47,7 @@ hook4InstHook pkg_descr lbi uhook flags = do
       , "tauola", "pythiaext" ] 
   putStrLn $ " BOOL = " ++ show b
   -- when (not b) $ do 
+  tdir <- getTemporaryDirectory
   let includedir = head . includeDirs . libBuildInfo . fromJust . library $ pkg_descr 
 
   let showCmdNRun c = putStrLn c >> system c  
@@ -55,8 +56,34 @@ hook4InstHook pkg_descr lbi uhook flags = do
                                    , "libexthep.sym", "libpgslib.sym"
                                    , "libstdhep.sym", "libtauola.sym"
                                    , "libpythiaext.sym" ] 
+  let cmd_cp_olympics = "cp " ++ (tdir </> "libolympics.a") ++ " " ++ libPref
+  showCmdNRun cmd_cp_olympics 
 
-  tdir <- getTemporaryDirectory
+
+  let fortranfiles = filter (\x->takeExtension x == ".f") (extraSrcFiles pkg_descr)
+  let objfile file = 
+        let fn = dropExtension (takeFileName file)
+        in tdir </> fn ++ ".o"
+  let objfiles = map objfile fortranfiles 
+      ofileargs = intercalate " " objfiles 
+  let libfilename = "libolympics.a"
+      dylibfilename = "libolympics.dylib"
+      sofilename = "libolympics.so"
+
+  putStrLn $ "make shared object of olympics "
+  putStrLn $ os   
+  let cmd_make_shared_olympics = case buildOS of 
+        OSX -> "gcc -dynamiclib -Wl,-flat_namespace,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0 -o " ++ (libPref </> dylibfilename) ++ " " ++ ofileargs
+        --OSX -> "gcc -dynamiclib -Wl,-commons,use_dylibs,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0 -o " ++ (libPref </> dylibfilename) ++ " " ++ ofileargs
+        Linux -> undefined -- "gcc -shared -Wl,-soname,libfformatter.so -o " ++ (libPref </> sofilename) ++ " " ++ ofileargs
+        _ -> error "cannot handle this OS" 
+  putStrLn $ cmd_make_shared_olympics
+  system cmd_make_shared_olympics
+  return () 
+
+
+
+
   mapM_ (mkDynLibraries b (tdir </> "pythia-pgs.orig" </> "libraries" </> "lhapdf" </> "lib") libPref) ["LHAPDF"]
   mapM_ (mkDynLibraries b (tdir </> "pythia-pgs.orig" </> "libraries" </> "PGS4" </> "lib") libPref) [ "Fmcfio", "exthep", "pgslib", "stdhep", "tauola" ] 
   mapM_ (mkDynLibraries b (tdir </> "pythia-pgs.orig" </> "libraries" </> "pylib" </> "lib") libPref) [ "pythiaext" ]
@@ -78,8 +105,12 @@ mkDynLibraries isnew origdir libPref lname = do
   -- showCmdNRun cmd_mv_sym
   let cmd_mkdyn = case buildOS of 
         OSX -> "gcc -dynamiclib -o " ++ (libPref </> dylibfilename)
-               ++ " -Wl,-exported_symbols_list," ++ (libPref</>symbolfilename) ++ ",-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0 " 
+               ++ " -Wl,-exported_symbols_list," ++ (libPref</>symbolfilename) ++ ",-flat_namespace,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0 " 
                 ++ (libPref </> libfilename)
+
+--        OSX -> "gcc -dynamiclib -o " ++ (libPref </> dylibfilename)
+--               ++ " -Wl,-exported_symbols_list," ++ (libPref</>symbolfilename) ++ ",-commons,use_dylibs,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0 " 
+--                ++ (libPref </> libfilename)
         Linux -> "gcc -shared -o " 
                  ++ (libPref </> sofilename) 
                  ++ " -Wl,--whole-archive "
@@ -121,6 +152,10 @@ hookfunction x cflags = do
   cdir <- getCurrentDirectory
   putStrLn $ tdir 
   putStrLn $ cdir 
+  
+  let fortranfiles = filter (\x->takeExtension x == ".f") (extraSrcFiles pkg_descr)
+  putStrLn $ show fortranfiles 
+  mkFortran tdir fortranfiles 
 
 
   when (not b) $ do
@@ -159,15 +194,37 @@ config bInfo tempornot = do
                   Nothing -> [ tdir</>"pythia-pgs.orig"</>"libraries"</>"lhapdf"</>"lib"
                              , tdir</>"pythia-pgs.orig"</>"libraries"</>"PGS4"</>"lib"
                              , tdir</>"pythia-pgs.orig"</>"libraries"</>"pylib"</>"lib"
+                             , tdir
                              ]
-                  Just dir -> [ dir ] 
+                  Just dir -> [ dir, tdir ] 
   let hbi = emptyBuildInfo { extraLibs = extraLibs buildinfo 
-                                         ++ ["LHAPDF","Fmcfio","exthep","pgslib","stdhep","tauola","pythiaext"]
+                                         ++ ["LHAPDF","Fmcfio","exthep","pgslib","stdhep","tauola","pythiaext","olympics"]
                            , extraLibDirs = libdirs
                            }
+  putStrLn $ "libdirs = " ++ show libdirs 
   let (r :: Maybe HookedBuildInfo) = Just (Just hbi, []) 
   --  putStrLn $ show hbi
   return r 
 
 
 
+mkFortran :: FilePath -> [FilePath] -> IO () 
+mkFortran tdir files = do 
+  -- compilation
+  let objfile file = 
+        let fn = dropExtension (takeFileName file)
+        in  tdir </> fn ++ ".o"
+  let compile file = do
+        let command = "gfortran -m64 -o " ++ objfile file ++ " -c " ++ file
+        putStrLn $ "run fortran: " ++  command  
+        system command 
+  mapM_ compile files 
+
+  -- linking 
+  let libfilename = "libolympics.a"
+  let objfiles = map objfile files 
+      ofileargs = intercalate " " objfiles
+  let command2 = "ar cr " ++ (tdir </> libfilename) ++ " " ++ ofileargs
+  putStrLn $ "run ar: " ++ command2 
+  system command2  
+  return ()
