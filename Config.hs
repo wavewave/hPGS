@@ -47,6 +47,15 @@ hook4InstHook pkg_descr lbi uhook flags = do
       , "tauola", "pythiaext" ] 
   putStrLn $ " BOOL = " ++ show b
   -- when (not b) $ do 
+  let includedir = head . includeDirs . libBuildInfo . fromJust . library $ pkg_descr 
+
+  let showCmdNRun c = putStrLn c >> system c  
+  let cmd_cp_sym x = "cp " ++ ( includedir  </> x) ++ " " ++ libPref
+  mapM_ (showCmdNRun . cmd_cp_sym) [ "libLHAPDF.sym", "libFmcfio.sym"
+                                   , "libexthep.sym", "libpgslib.sym"
+                                   , "libstdhep.sym", "libtauola.sym"
+                                   , "libpythiaext.sym" ] 
+
   tdir <- getTemporaryDirectory
   mapM_ (mkDynLibraries b (tdir </> "pythia-pgs.orig" </> "libraries" </> "lhapdf" </> "lib") libPref) ["LHAPDF"]
   mapM_ (mkDynLibraries b (tdir </> "pythia-pgs.orig" </> "libraries" </> "PGS4" </> "lib") libPref) [ "Fmcfio", "exthep", "pgslib", "stdhep", "tauola" ] 
@@ -101,7 +110,6 @@ hookfunction x cflags = do
                   , copyVerbosity = installVerbosity iflags
                   }
       copydest = fromFlag (copyDest (copyFlags))
-      includedir = head . includeDirs . libBuildInfo . fromJust . library $ pkg_descr 
       libPref = libdir . absoluteInstallDirs pkg_descr binfo $ copydest
   
   b <- return . and <=< mapM (checkLibFile libPref) $
@@ -114,12 +122,6 @@ hookfunction x cflags = do
   putStrLn $ tdir 
   putStrLn $ cdir 
 
-  let showCmdNRun c = putStrLn c >> system c  
-  let cmd_cp_sym x = "cp " ++ ( includedir  </> x) ++ " " ++ libPref
-  mapM_ (showCmdNRun . cmd_cp_sym) [ "libLHAPDF.sym", "libFmcfio.sym"
-                                   , "libexthep.sym", "libpgslib.sym"
-                                   , "libstdhep.sym", "libtauola.sym"
-                                   , "libpythiaext.sym" ] 
 
   when (not b) $ do
     system $ "tar xvzf " ++  (cdir </> "pythia-pgs/pythia-pgs.tar.gz") 
