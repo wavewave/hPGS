@@ -1,5 +1,5 @@
 Name:		hPGS
-Version:	0.0
+Version:	0.0.0.999
 Synopsis:	
 Description: 	
 License: 	BSD3
@@ -11,17 +11,28 @@ Cabal-Version:  >= 1.8
 data-files:     
 Extra-source-files: Config.hs
                     pythia-pgs/pythia-pgs.tar.gz
+                    csrc/libLHAPDF.sym 
+                    csrc/libFmcfio.sym
+                    csrc/libexthep.sym
+                    csrc/libpgslib.sym
+                    csrc/libstdhep.sym
+                    csrc/libtauola.sym
+                    csrc/libpythiaext.sym
+
+             
 
 
 
-Executable hpgs
-  Main-is: hpgs.hs
-  hs-source-dirs: exe
-  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
-  ghc-prof-options: -caf-all -auto-all
-  Build-Depends: 
-                   base>4, mtl>2, directory, filepath,
-                   cmdargs, hPGS
+--Executable hpgs
+--  Main-is: hpgs.hs
+--  hs-source-dirs: exe
+--  ghc-options: 	-Wall -O2 -threaded -funbox-strict-fields -fno-warn-unused-do-bind
+--  ghc-prof-options: -caf-all -auto-all
+--  Build-Depends: 
+--                   base>4, mtl>2, directory, filepath,
+--                   cmdargs, hPGS
+--  extra-libraries: LHAPDF, Fmcfio, exthep, pgslib, stdhep, tauola, pythiaext
+
 
 Library
   hs-source-dirs: lib
@@ -29,12 +40,17 @@ Library
   ghc-prof-options: -caf-all -auto-all
   Build-Depends: 
                    base>4, mtl>2, directory, filepath,
-                   cmdargs
+                   cmdargs, bindings-DSL >= 1.0 && < 1.1
   Exposed-Modules: 
                    HEP.Package.PGS.Type
                    HEP.Package.PGS.Job
                    HEP.Package.PGS.Command
+                   HEP.Package.PGS.PGSLIB.Internal
   Other-Modules: 
-
- 
+  Include-dirs:    csrc
+  Install-includes: 
+                   pgslib.h
+                   fortran2c.h
+  C-sources:       csrc/pgslib.c
+  extra-libraries: gfortran
 		 

@@ -4,6 +4,8 @@
 > import Distribution.PackageDescription
 > import Config 
 > 
-> main = defaultMainWithHooks fortranCompileHook 
+> main :: IO ()
+> main = do 
+>   defaultMainWithHooks fortranCompileHook
 >
 
