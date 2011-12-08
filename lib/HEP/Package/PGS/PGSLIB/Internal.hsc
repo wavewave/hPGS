@@ -7,26 +7,22 @@ module HEP.Package.PGS.PGSLIB.Internal where
 
 #include "pgslib.h"
 
--- foreign import ccall "pgslib.h pgs_initialize" c_pgs_initialize
---  :: IO ()
-
 #ccall pgs_initialize_ , IO ()
 #ccall pgs_user_args_ , IO () 
-
+#ccall pgs_remove_comments_ , Ptr CChar -> Ptr CInt -> Ptr CInt -> IO ()
 #ccall pgs_load_param_ , IO ()
 #ccall pgs_init_herwig_ , IO ()
 #ccall pgs_init_alpher_ , IO ()
-
-
+#ccall pgs_herwig_susy_file_ , Ptr CChar -> Ptr CInt -> IO ()
 #ccall pgs_random_seed_ , Ptr CInt -> IO CInt
 #ccall pgs_herwig_event_ , IO () 
 #ccall pgs_alpher_event_ , IO () 
 #ccall pgs_next_event_ , IO CInt 
-
+#ccall pgs_write_event_ , Ptr CChar -> Ptr CInt -> IO ()
 #ccall pgs_read_event_ , IO CInt
 #ccall pgs_ranmar_ , IO CFloat 
 #ccall pgs_rannor_ , Ptr CFloat -> Ptr CFloat -> IO ()
-
+-- #ccall RANMAR_ , 
 #ccall pgs_trigger_ , IO ()
 #ccall pgs_find_photon_electron_trig_ , IO ()
 #ccall pgs_find_muon_trig_ , IO ()
@@ -38,15 +34,12 @@ module HEP.Package.PGS.PGSLIB.Internal where
 #ccall pgs_find_met_trig_ , IO ()
 #ccall pgs_find_tracks_ , IO ()
 #ccall pgs_track_res_ , Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> IO ()
-
 #ccall pgs_fill_cal_ , IO ()
 #ccall pgs_cal_crack_ , Ptr CDouble -> Ptr CDouble -> IO CInt 
-
 #ccall pgs_find_trigger_clusters_ , IO ()
 #ccall pgs_cone_jets_ , IO ()
 #ccall pgs_kt_jets_ , IO ()
 #ccall pgs_kt_dist_ , Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> IO CDouble
-
 #ccall pgs_recon_ , IO ()
 #ccall pgs_find_photon_electron_ , IO ()
 #ccall pgs_trk_isosum_ , Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CInt -> Ptr CDouble -> Ptr CInt -> IO ()
@@ -54,9 +47,7 @@ module HEP.Package.PGS.PGSLIB.Internal where
 #ccall pgs_eta_phi_diff_ , Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> IO ()
 #ccall pgs_tower_isosum_ , Ptr CInt -> Ptr CInt -> Ptr CDouble -> IO ()
 #ccall pgs_find_muons_ , IO ()
-
 #ccall pgs_muo_eff_ , Ptr CDouble -> IO CDouble
-
 #ccall pgs_find_taus_ , IO ()
 #ccall pgs_find_jets_ , IO ()
 #ccall pgs_jet_flavor_tags_ , Ptr CInt -> Ptr CDouble -> IO ()
@@ -67,7 +58,6 @@ module HEP.Package.PGS.PGSLIB.Internal where
 #ccall pgs_trigger_cluster_width_ , Ptr CInt -> IO ()
 #ccall pgs_find_heavy_ , IO ()
 #ccall pgs_heavy_eff_ , Ptr CDouble -> Ptr CFloat -> Ptr CFloat -> IO ()
-
 #ccall et_obj_ , Ptr CInt -> IO ()
 #ccall pt_obj_ , Ptr CInt -> IO ()
 #ccall p_obj_ , Ptr CInt -> IO ()
@@ -110,3 +100,4 @@ module HEP.Package.PGS.PGSLIB.Internal where
 #ccall pgs_unique_id_ , IO ()
 #ccall pgs_object_cuts_ , Ptr CInt -> IO CInt 
 #ccall pgs_tau_decay_mode_ , Ptr CInt -> Ptr CInt -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CDouble -> Ptr CInt -> IO ()
+

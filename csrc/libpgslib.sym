@@ -1,15 +1,15 @@
 _pgs_initialize_
 _pgs_user_args_
-
+_pgs_remove_comments_
 _pgs_load_param_
 _pgs_init_herwig_
 _pgs_init_alpher_
-
+_pgs_herwig_susy_file_
 _pgs_random_seed_
 _pgs_herwig_event_
 _pgs_alpher_event_
 _pgs_next_event_
-
+_pgs_write_event_
 _pgs_read_event_
 _pgs_ranmar_
 _pgs_rannor_
@@ -25,15 +25,12 @@ _pgs_find_vertex_trig_
 _pgs_find_met_trig_
 _pgs_find_tracks_
 _pgs_track_res_
-
 _pgs_fill_cal_
 _pgs_cal_crack_
-
 _pgs_find_trigger_clusters_
 _pgs_cone_jets_
 _pgs_kt_jets_
 _pgs_kt_dist_
-
 _pgs_recon_
 _pgs_find_photon_electron_
 _pgs_trk_isosum_
@@ -41,9 +38,7 @@ _pgs_eta_phi_hep_match_
 _pgs_eta_phi_diff_
 _pgs_tower_isosum_
 _pgs_find_muons_
-
 _pgs_muo_eff_
-
 _pgs_find_taus_
 _pgs_find_jets_
 _pgs_jet_flavor_tags_
@@ -54,8 +49,6 @@ _pgs_cluster_width_
 _pgs_trigger_cluster_width_
 _pgs_find_heavy_
 _pgs_heavy_eff_
-
-
 _et_obj_
 _pt_obj_ 
 _p_obj_
@@ -98,8 +91,5 @@ _pgs_cor_met_
 _pgs_unique_id_
 _pgs_object_cuts_
 _pgs_tau_decay_mode_
-
-
-
 
 

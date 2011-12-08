@@ -9,31 +9,29 @@ extern "C" {
 
   void FORTRANNAME(pgs_initialize)( void ) ;
   void FORTRANNAME(pgs_user_args)( void ) ;
-  //  void FORTRANNAME(pgs_remove_comments)( ) ;   
+  void FORTRANNAME(pgs_remove_comments)(char* line, int* len, int* _len_line);   
   void FORTRANNAME(pgs_load_param)( void ) ; 
   void FORTRANNAME(pgs_init_herwig)( void ) ;
   void FORTRANNAME(pgs_init_alpher)( void ) ; 
-  //  void FORTRANNAME(pgs_herwig_susy_file)( ); 
+  void FORTRANNAME(pgs_herwig_susy_file)(char* susy_file, int* _len_susy_file ); 
   int  FORTRANNAME(pgs_random_seed)( int* ij ); 
   void FORTRANNAME(pgs_herwig_event)( void ); 
   void FORTRANNAME(pgs_alpher_event)( void ); 
   int  FORTRANNAME(pgs_next_event)( void );
-  //  void FORTRANNAME(pgs_write_event)();
+  void FORTRANNAME(pgs_write_event)(char* command, int* _len_command);
   int  FORTRANNAME(pgs_read_event)( void );
   float FORTRANNAME(pgs_ranmar)( void ); 
   void FORTRANNAME(pgs_rannor)( float* a, float* b); 
-  //  subroutine RANMAR(); 
+  // void FORTRANNAME(RANMAR)(float* RVEC,int* LENV); 
   void FORTRANNAME(pgs_trigger)(void); 
   void FORTRANNAME(pgs_find_photon_electron_trig)(void); 
   void FORTRANNAME(pgs_find_muon_trig)(void); 
   void FORTRANNAME(pgs_find_tau_trig)(void); 
   void FORTRANNAME(pgs_trigger_cal_isosum)(int* itrc,float* sum); 
-  
   void FORTRANNAME(pgs_track_assoc)(float* eta, float* phi,
                                     int* iseed, int* n10,
                                     float* ptmax, int* nsio,
                                     float* ptmaxiso); 
-  
   void FORTRANNAME(pgs_find_jet_trig)(void);
   void FORTRANNAME(pgs_find_vertex_trig)(void);
   void FORTRANNAME(pgs_find_met_trig)(void);
@@ -41,14 +39,10 @@ extern "C" {
   void FORTRANNAME(pgs_track_res)(double p[3], double* q,
                                   double pnew[3], double* qnew);
   void FORTRANNAME(pgs_fill_cal)(void); 
-
   int  FORTRANNAME(pgs_cal_crack)(double* eta,double* phi);
-
   void FORTRANNAME(pgs_find_trigger_clusters)(void); 
   void FORTRANNAME(pgs_cone_jets)(void);
   void FORTRANNAME(pgs_kt_jets)(void);
-
-
   double FORTRANNAME(pgs_kt_dist)(double* p1, double* eta1, double* phi1,
                                   double* p2, double* eta2, double* phi2); 
   void FORTRANNAME(pgs_recon)(void); 
@@ -129,8 +123,6 @@ extern "C" {
                                        double* pvis, double* pneu,
                                        double* ptmax, double* ptmin,
                                        int* mch); 
-
-
 
 #ifdef __CPLUSPLUS
 }
