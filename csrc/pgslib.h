@@ -38,8 +38,8 @@ extern "C" {
   void FORTRANNAME(pgs_find_vertex_trig)(void);
   void FORTRANNAME(pgs_find_met_trig)(void);
   void FORTRANNAME(pgs_find_tracks)(void);
-  //void FORTRANNAME(pgs_track_res)(double p[3], double* q,
-  //                                double pnew[3], double* qnew);
+  void FORTRANNAME(pgs_track_res)(double p[3], double* q,
+                                  double pnew[3], double* qnew);
   void FORTRANNAME(pgs_fill_cal)(void); 
 
   int  FORTRANNAME(pgs_cal_crack)(double* eta,double* phi);
@@ -47,7 +47,10 @@ extern "C" {
   void FORTRANNAME(pgs_find_trigger_clusters)(void); 
   void FORTRANNAME(pgs_cone_jets)(void);
   void FORTRANNAME(pgs_kt_jets)(void);
-  // real*8 function pgs_kt_dist(p1,...); 
+
+
+  double FORTRANNAME(pgs_kt_dist)(double* p1, double* eta1, double* phi1,
+                                  double* p2, double* eta2, double* phi2); 
   void FORTRANNAME(pgs_recon)(void); 
   void FORTRANNAME(pgs_find_photon_electron)(void); 
 
@@ -63,19 +66,21 @@ extern "C" {
                                      double* diff); 
   void FORTRANNAME(pgs_tower_isosum)(int* ieta,int* iphi,double* sum); 
   void FORTRANNAME(pgs_find_muons)(void); 
-  // real*8 function pgs_muo_eff ; 
+  double FORTRANNAME(pgs_muo_eff)(double* v4); 
   void FORTRANNAME(pgs_find_taus)(void);
   void FORTRANNAME(pgs_find_jets)(void);
   void FORTRANNAME(pgs_jet_flavor_tags)(int* jet,double* zvertex);
   void FORTRANNAME(pgs_loose_btag)(int* type, int* c_in_cone, 
                                    int* b_in_cone, double* etjin,
                                    double* etaj, double* efftag); 
-  // subroutine pgs_tight_btag(type,...); 
-  // subroutine pgs_true_jet_type(jet...);
-  // function pgs_cluster_width(iclu); 
-  // function pgs_trigger_cluster_width(itrc); 
+  void FORTRANNAME(pgs_tight_btag)(int* type, int* c_in_cone, int* b_in_cone,
+                                   double* etjin, double* etaj, double* efftag); 
+  void FORTRANNAME(pgs_true_jet_type)(int* jet, int* type,
+                                      int* c_in_cone,int *b_in_cone);
+  void FORTRANNAME(pgs_cluster_width)(int* iclu); 
+  void FORTRANNAME(pgs_trigger_cluster_width)(int* itrc); 
   void FORTRANNAME(pgs_find_heavy)(void); 
-  // subroutine pgs_heavy_eff(v4,eff,trigeff);
+  void FORTRANNAME(pgs_heavy_eff)(double* v4, float* eff, float* trigeff);
   void FORTRANNAME(et_obj)(int* iobj);
   void FORTRANNAME(pt_obj)(int* iobj);
   void FORTRANNAME(p_obj)(int* iobj);  
@@ -101,23 +106,29 @@ extern "C" {
   void FORTRANNAME(p_trk)(int* itrk); 
   void FORTRANNAME(eta_trk)(int* itrk); 
   void FORTRANNAME(phi_trk)(int* itrk); 
-  // real*8 function cos_theta(p,q); 
-  // real*8 function cos_del_phi(p,q); 
-  // real*8 function del_phi(p,q);
-  // real*8 function v4mass(p);
-  // real*8 function v4mass2(p,q);
-  // real*8 function v4et(p);
-  // real*8 function v4p(p);
-  // real*8 function v4pt(p);
-  // real*8 function v4eta(p); 
-  // real*8 function v4phi(p); 
-  // subroutine pgs_etaphi_index(eta,phi,ieta,iphi); 
-  // subroutine pgs_index_etaphi(ieta,iphi,eta,phi);
-  // subroutine pgs_dump_event(mask,hepcut,calcut); 
+  double FORTRANNAME(cos_theta)(double* p, double* q); 
+  double FORTRANNAME(cos_del_phi)(double* p, double* q); 
+  double FORTRANNAME(del_phi)(double* p, double* q);
+  double FORTRANNAME(v4mass)(double* p);
+  double FORTRANNAME(v4mass2)(double* p, double* q);
+  double FORTRANNAME(v4et)(double* p);
+  double FORTRANNAME(v4p)(double* p);
+  double FORTRANNAME(v4pt)(double* p);
+  double FORTRANNAME(v4eta)(double* p); 
+  double FORTRANNAME(v4phi)(double* p); 
+  void FORTRANNAME(pgs_etaphi_index)(double* eta, double* phi,
+                                     int* ieta, int* iphi); 
+  void FORTRANNAME(pgs_index_etaphi)(int* ieta, int* iphi,
+                                     double* eta, double* phi);
+  void FORTRANNAME(pgs_dump_event)(int* mask, double* hepcut, double* calcut); 
   void FORTRANNAME(pgs_cor_met)(void); 
   void FORTRANNAME(pgs_unique_id)(void);
   int  FORTRANNAME(pgs_object_cuts)(int* iobj);
-  // subroutine pgs_tau_decay_mode(jtau...); 
+  void FORTRANNAME(pgs_tau_decay_mode)(int* jtau, int* dmode,
+                                       double* ettau, double* etagen,
+                                       double* pvis, double* pneu,
+                                       double* ptmax, double* ptmin,
+                                       int* mch); 
 
 
 
